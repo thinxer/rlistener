@@ -1,0 +1,11 @@
+syntax="proto3";
+package rlistener;
+option go_package="github.com/thinxer/rlistener/proto;rlistener";
+
+service RemoteListener {
+	rpc Accept(stream Buffer) returns (stream Buffer);
+}
+
+message Buffer {
+	bytes data = 1;
+}
