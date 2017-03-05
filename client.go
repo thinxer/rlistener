@@ -49,10 +49,8 @@ func Dial(target string, options ...grpc.DialOption) (net.Listener, error) {
 }
 
 type stream struct {
-	ctx    context.Context
+	c      pb.RemoteListener_AcceptClient
 	cancel context.CancelFunc
-
-	c pb.RemoteListener_AcceptClient
 
 	rbuf []byte
 }
@@ -92,6 +90,7 @@ func (l *listener) Accept() (net.Conn, error) {
 
 	c, err := l.client.Accept(ctx)
 	if err != nil {
+		cancel()
 		return nil, err
 	}
 
@@ -105,7 +104,7 @@ func (l *listener) Accept() (net.Conn, error) {
 		remote = v
 	}
 	return &conn{
-		ReadWriteCloser: &stream{ctx, cancel, c, nil},
+		ReadWriteCloser: &stream{c, cancel, nil},
 		local:           addr(l.target),
 		remote:          addr(remote),
 	}, nil
