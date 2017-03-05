@@ -15,7 +15,7 @@ import (
 type addr string
 
 func (a addr) Network() string { return "rlistener" }
-func (a addr) String() string  { return "rlistener:" + string(a) }
+func (a addr) String() string  { return string(a) }
 
 type conn struct {
 	io.ReadWriteCloser
